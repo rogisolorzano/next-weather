@@ -4,15 +4,18 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
-import * as UseCookies from "@/lib/utils/use-cookies";
+import * as UseCookies from "@/lib/hooks/use-cookies";
 import * as Navigation from "next/navigation";
 import { mocked } from "@/tests/utils/mocked";
 import { getCookieManagerMock } from "@/tests/mocks/cookie-manager.mock";
-import { AUTHENTICATED_LANDING_ROUTE, SESSION_COOKIE_NAME } from "../lib/constants";
+import {
+  AUTHENTICATED_LANDING_ROUTE,
+  SESSION_COOKIE_NAME,
+} from "../lib/constants";
 import { getAppRouterMock } from "@/tests/mocks";
 import LoginForm from "./login-form";
 
-jest.mock("@/lib/utils/use-cookies");
+jest.mock("@/lib/hooks/use-cookies");
 jest.mock("next/navigation");
 const useCookiesModule = mocked(UseCookies);
 const navigationModule = mocked(Navigation);
