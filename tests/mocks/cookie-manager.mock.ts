@@ -1,4 +1,4 @@
-import { CookieManager } from "@/lib/utils/use-cookies";
+import { CookieManager } from "@/lib/hooks/use-cookies";
 
 export const getCookieManagerMock = (): CookieManager => ({
   setCookie: jest.fn(),

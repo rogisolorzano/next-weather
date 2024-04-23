@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import ErrorMessage from "./error-message";
-import { useCookies } from "@/lib/utils/use-cookies";
+import { useCookies } from "@/lib/hooks/use-cookies";
 import { useRouter } from "next/navigation";
 import { wait } from "../lib/utils/wait";
 import { useState } from "react";

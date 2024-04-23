@@ -4,44 +4,80 @@ import { useState } from "react";
 import CommandPalette from "react-cmdk";
 import { Button } from "@radix-ui/themes";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+  Suggestion,
+} from "use-places-autocomplete";
+import { useLocationStore } from "@/lib/store/location/location";
 
 type SearchBarProps = {
   className?: string;
   fullWidth?: boolean;
 };
 
-export default function SearchBar(props: SearchBarProps) {
+export default function SearchBar({ className, fullWidth }: SearchBarProps) {
+  const width = fullWidth ? "100%" : "auto";
   const [open, setOpen] = useState<boolean>(false);
-  const [search, setSearch] = useState("");
-  const width = props.fullWidth ? "100%" : "auto";
+  const { addLocation } = useLocationStore();
+
+  const {
+    value,
+    suggestions: { status, data },
+    setValue,
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    requestOptions: {
+      types: ["(cities)"],
+    },
+    debounce: 250,
+  });
 
   const openPalette = () => setOpen(true);
 
+  const handleSelect =
+    ({ description }: Suggestion) =>
+    async () => {
+      setOpen(false);
+      setValue("");
+      clearSuggestions();
+      const [result] = await getGeocode({ address: description });
+      const { lat, lng } = getLatLng(result);
+      addLocation({
+        lat,
+        lon: lng,
+        name: description,
+      });
+    };
+
   return (
-    <div className={props.className}>
+    <div className={className}>
       <Button style={{ width }} variant="soft" onClick={openPalette}>
         <MagnifyingGlassIcon /> Search for a city...
       </Button>
       <CommandPalette
-        onChangeSearch={setSearch}
+        placeholder="Search for a city..."
+        onChangeSearch={setValue}
         onChangeOpen={setOpen}
-        search={search}
+        search={value}
         isOpen={open}
       >
-        <CommandPalette.List heading="Suggestions">
-          <CommandPalette.ListItem index={0} showType={false}>
-            Kansas City, KS
-          </CommandPalette.ListItem>
-          <CommandPalette.ListItem index={1} showType={false}>
-            Olathe, KS
-          </CommandPalette.ListItem>
-          <CommandPalette.ListItem index={2} showType={false}>
-            Wichita, KS
-          </CommandPalette.ListItem>
-          <CommandPalette.ListItem index={3} showType={false}>
-            Salina, KS
-          </CommandPalette.ListItem>
-        </CommandPalette.List>
+        {data.length > 0 && status === "OK" ? (
+          <CommandPalette.List heading="Suggestions">
+            {data.map((suggestion, i) => (
+              <CommandPalette.ListItem
+                key={i}
+                index={i}
+                showType={false}
+                onClick={handleSelect(suggestion)}
+              >
+                {suggestion.description}
+              </CommandPalette.ListItem>
+            ))}
+          </CommandPalette.List>
+        ) : (
+          <CommandPalette.FreeSearchAction />
+        )}
       </CommandPalette>
     </div>
   );
