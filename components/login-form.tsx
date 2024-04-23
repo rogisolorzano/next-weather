@@ -7,9 +7,9 @@ import * as yup from "yup";
 import ErrorMessage from "./error-message";
 import { useCookies } from "@/lib/utils/use-cookies";
 import { useRouter } from "next/navigation";
-import { wait } from "./wait";
+import { wait } from "../lib/utils/wait";
 import { useState } from "react";
-import { SESSION_COOKIE_NAME, AUTHENTICATED_LANDING_ROUTE } from "./constants";
+import { SESSION_COOKIE_NAME, AUTHENTICATED_LANDING_ROUTE } from "../lib/constants";
 
 const schema = yup
   .object({

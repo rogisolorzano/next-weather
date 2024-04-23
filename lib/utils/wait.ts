@@ -1,4 +1,4 @@
-import { Milliseconds } from "./time";
+import { Milliseconds } from "../time";
 
 /**
  * Creates a promise that resolves in n milliseconds.
