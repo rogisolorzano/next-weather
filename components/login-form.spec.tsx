@@ -8,7 +8,7 @@ import * as UseCookies from "@/lib/utils/use-cookies";
 import * as Navigation from "next/navigation";
 import { mocked } from "@/tests/utils/mocked";
 import { getCookieManagerMock } from "@/tests/mocks/cookie-manager.mock";
-import { AUTHENTICATED_LANDING_ROUTE, SESSION_COOKIE_NAME } from "./constants";
+import { AUTHENTICATED_LANDING_ROUTE, SESSION_COOKIE_NAME } from "../lib/constants";
 import { getAppRouterMock } from "@/tests/mocks";
 import LoginForm from "./login-form";
 

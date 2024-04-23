@@ -8,7 +8,7 @@ export default function Login() {
       <Container size="1" p="4">
         <Flex direction="column" gap="2" align="center">
           <Logo />
-          <Text>Because yolo-ing it sucks</Text>
+          <Text>Because guessing is overrated</Text>
         </Flex>
         <LoginForm />
       </Container>

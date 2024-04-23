@@ -3,7 +3,7 @@ import { useCookies } from "@/lib/utils/use-cookies";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { Button } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
-import { SESSION_COOKIE_NAME, LOGIN_ROUTE } from "./constants";
+import { SESSION_COOKIE_NAME, LOGIN_ROUTE } from "../lib/constants";
 
 export default function LogoutButton() {
   const { removeCookie } = useCookies();

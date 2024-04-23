@@ -4,7 +4,7 @@ import * as Navigation from "next/navigation";
 import LogoutButton from "./logout-button";
 import { mocked } from "@/tests/utils/mocked";
 import { getCookieManagerMock } from "@/tests/mocks/cookie-manager.mock";
-import { LOGIN_ROUTE, SESSION_COOKIE_NAME } from "./constants";
+import { LOGIN_ROUTE, SESSION_COOKIE_NAME } from "../lib/constants";
 import { getAppRouterMock } from "@/tests/mocks";
 
 jest.mock("@/lib/utils/use-cookies");
