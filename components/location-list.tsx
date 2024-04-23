@@ -4,7 +4,8 @@ import {
   useWeatherForLocations,
 } from "@/lib/hooks/use-weather-for-locations";
 import { WeatherInfo } from "@/lib/types";
-import { Box, Card, Flex, Grid, Progress, Text } from "@radix-ui/themes";
+import { Card, Flex, Grid, Progress, Text } from "@radix-ui/themes";
+import Image from "next/image";
 
 function LocationItem(props: WeatherInfo) {
   const current = props.current ? Math.round(props.current) : "--";
@@ -12,7 +13,7 @@ function LocationItem(props: WeatherInfo) {
   const low = props.low ? Math.round(props.low) : "--";
   return (
     <Card>
-      <Flex justify="between" pb="6">
+      <Flex justify="between" pb={{ initial: "4", sm: "6" }}>
         <Flex direction="column">
           <Text size="4" weight="bold">
             {props.name}
@@ -24,10 +25,15 @@ function LocationItem(props: WeatherInfo) {
         <Text size={{ initial: "8", sm: "9" }}>{current}&deg;</Text>
       </Flex>
       <Flex justify="between">
-        <Text size="1" weight="bold">
-          {props.weatherSummary ?? "--"}
-        </Text>
-        <Flex gapX={"3"}>
+        <Flex direction="column" justify="end" align="center">
+          {props.iconUrl && (
+            <Image src={props.iconUrl} alt="graphic" height="32" width="32" />
+          )}
+          <Text size="1" weight="bold">
+            {props.weatherSummary ?? "--"}
+          </Text>
+        </Flex>
+        <Flex gapX={"3"} align="end">
           <Text size="2">H: {high}&deg;</Text>
           <Text size="2">L: {low}&deg;</Text>
         </Flex>
@@ -42,7 +48,7 @@ export default function LocationList() {
   if (status === LocationWeatherStatus.ERROR) {
     return (
       <Flex pt="8" justify="center">
-        <Text>Add a city to get started</Text>
+        <Text>Woops, we ran into an issue. Refresh the page to try again.</Text>
       </Flex>
     );
   }
@@ -64,7 +70,11 @@ export default function LocationList() {
   }
 
   return (
-    <Grid columns={{ initial: "1", sm: "2" }} gap="3">
+    <Grid
+      columns={{ initial: "1", sm: "2" }}
+      pt={{ initial: "0", sm: "2" }}
+      gap="3"
+    >
       {weatherInfos.map((info, index) => (
         <LocationItem key={index} {...info} />
       ))}

@@ -12,9 +12,9 @@ export default function LogoutButton() {
   const { clear } = useLocationStore();
 
   const logout = () => {
-    clear();
     removeCookie(SESSION_COOKIE_NAME);
     push(LOGIN_ROUTE);
+    clear();
   };
 
   return (

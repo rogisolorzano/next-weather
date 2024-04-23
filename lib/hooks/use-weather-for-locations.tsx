@@ -18,16 +18,24 @@ export type LocationWeatherState = {
   weatherInfos: WeatherInfo[];
 };
 
+type WeatherCacheItem = {
+  cachedAt: string;
+  item: WeatherInfo;
+};
+
+/**
+ * Handles fetching weather data from the API for locations selected by the user.
+ * Uses a short lived cache to minimize calls to the API.
+ */
 export function useWeatherForLocations(): LocationWeatherState {
-  const cacheRef = useRef<Record<string, WeatherInfo>>({});
+  const cacheRef = useRef<Record<string, WeatherCacheItem>>({});
+  const cacheHydrated = useRef<boolean>(false);
   const { locations } = useLocationStore();
   const [state, setState] = useState<LocationWeatherState>({
     status: LocationWeatherStatus.LOADING,
     weatherInfos: [],
   });
   const client = useWeatherApi();
-
-  console.log("rendered in useWeatherForLocations", locations);
 
   const hydrateWeatherCache = () => {
     try {
@@ -36,6 +44,7 @@ export function useWeatherForLocations(): LocationWeatherState {
         return;
       }
       cacheRef.current = JSON.parse(cache);
+      cacheHydrated.current = true;
     } catch (e) {
       // Capture trace
     }
@@ -52,28 +61,41 @@ export function useWeatherForLocations(): LocationWeatherState {
   const getWeatherInfo = async (location: Location): Promise<WeatherInfo> => {
     const cachedItem = cacheRef.current[location.name];
     if (cachedItem) {
-      console.log("Cache hit:", cachedItem);
-      return cachedItem;
+      const expiry = new Date(cachedItem.cachedAt);
+      const now = new Date();
+      const ageInSeconds = Math.abs(now.getTime() - expiry.getTime()) / 1000;
+      const isExpired = ageInSeconds > 30;
+      if (isExpired) {
+        delete cacheRef.current[location.name];
+      } else {
+        return cachedItem.item;
+      }
     }
     const response = await client.getWeather({
       lat: location.lat,
       lon: location.lon,
     });
-    const info = {
+    const info: WeatherInfo = {
       name: location.name,
       currentTime: getTime(response.timezoneOffset),
+      iconUrl: response.iconUrl,
       weatherSummary: response.description,
       current: response.currentTemp,
       high: response.highTemp,
       low: response.lowTemp,
     };
-    cacheRef.current[location.name] = info;
+    cacheRef.current[location.name] = {
+      cachedAt: new Date().toISOString(),
+      item: info,
+    };
     return info;
   };
 
   const fetchWeatherForLocations = async (locations: Location[]) => {
     try {
-      hydrateWeatherCache();
+      if (!cacheHydrated.current) {
+        hydrateWeatherCache();
+      }
       const chunks = chunk(locations, 3);
       const allWeatherInfos = [];
       for (const locationChunk of chunks) {

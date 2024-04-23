@@ -20,6 +20,7 @@ export class OpenWeatherApiClient implements WeatherApi {
           lat: request.lat,
           lon: request.lon,
           appid: this.apiKey,
+          units: "imperial",
           exclude: "minutely,hourly,alerts",
         },
       },
