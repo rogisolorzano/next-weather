@@ -80,7 +80,7 @@ Commands:
 `make run-e2e`: runs the tests in headless mode
 `make open-e2e`: brings up the Cypress UI so you can browse and run tests manually.
 
-Both of these commands handle spinning up the nextjs app docker pod.
+Both of these commands handle spinning up the nextjs app docker pod. By default, cypress tests point at this docker container (spun up at http://localhost:3010). If you would like tests to instead point to your locally running app, you can edit that baseURL in `cypress.config.js`.
 
 ## Learn More
 
