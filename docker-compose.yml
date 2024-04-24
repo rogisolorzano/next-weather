@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  next-weather:
+    build: .
+    ports:
+      - "3010:3000"
+    environment:
+      - NODE_ENV=production
