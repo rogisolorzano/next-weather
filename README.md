@@ -62,9 +62,25 @@ Auth is stubbed out - we have some logic in `middleware.ts` to check a session c
 
 ## Tests
 
+### Unit tests
+
 Run `npm run test` to run unit tests.
 
-End to end testing with cypress is WIP.
+### E2E tests
+
+e2e testing is setup with Cypress. These tests live in `./cypress`.
+
+All requests to third party APIs are mocked for test consistency (Google Places, OpenWeather).
+
+Tests are run against a production-like build of the app. This is packaged in a docker container to make it easier to spin up.
+
+First, make sure you have [Docker](https://docs.docker.com/desktop/) installed.
+
+Commands:
+`make run-e2e`: runs the tests in headless mode
+`make open-e2e`: brings up the Cypress UI so you can browse and run tests manually.
+
+Both of these commands handle spinning up the nextjs app docker pod. By default, cypress tests point at this docker container (spun up at http://localhost:3010). If you would like tests to instead point to your locally running app, you can edit that baseURL in `cypress.config.js`.
 
 ## Learn More
 
